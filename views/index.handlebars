@@ -12,7 +12,7 @@
                             <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Saved Articles</a>
+                            <a class="nav-link" id="displaySaved" href="/getSaved">Saved Articles</a>
                         </li>
                         <li class="nav-item">
                             <a  class="btn btn-primary" id="scrape" href="/scrape">Scrape some Articles</a>
@@ -35,6 +35,18 @@
                     <a>{{this.url}}</a>
                     <br><br>
                     <button type="button" data-id={{this._id}} class="btn btn-info" id="save">Save Article</button>
+                </li>
+                <br><br>
+            {{/each}}
+        </ul>
+        <ul class="arts">
+            {{#each saved}}
+                <li>
+                    <h4>{{this.headline}}</h4>
+                    <p>{{this.summary}}</p>
+                    <a>{{this.url}}</a>
+                    <br><br>
+                    <button type="button" data-id={{this._id}} class="btn btn-info" id="note">Note</button>
                 </li>
                 <br><br>
             {{/each}}

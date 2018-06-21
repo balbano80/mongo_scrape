@@ -18,14 +18,16 @@ $("#scrape").on("click", function(event){
       })
 });
 
-
 $("#save").on("click", function(){
-
+    // console.log($(this).data("id"));
+    const queryURL = "/save/" + $(this).data("id");
+    console.log(queryURL);
     $.ajax({
-        method: "PUT",
-        url: "save"
+        method: "GET",
+        url: queryURL
     }).then(function(data){
-        console.log(data);
+        console.log("in app.js received saved block", data);
+        window.location.href = "/getSaved";
     })
 })
 

@@ -37,10 +37,7 @@ app.get("/", function(req, res) {
 //reach out to the site, scrape and display articles on page
 app.get("/scrape", function(req, res){
 
-    // axios.get("https://www.nytimes.com").then(function(response){
-
-    //     const $ = cheerio.load(response.data);
-    const articleArr = [];
+    // const articleArr = [];
     request("https://nbcbayarea.com/news/national-international/", function (error, response, html){
         if(!error  && response.statusCode == 200){
             // console.log(html);
@@ -70,7 +67,7 @@ app.get("/scrape", function(req, res){
 
 app.get("/articles", function(req, res){
     db.Article.find({})
-    .then(function(dbArticle){
+      .then(function(dbArticle){
         console.log("in find all articles block");
         res.render("index", {articles: dbArticle});
         // res.json(dbArticle);
@@ -79,14 +76,24 @@ app.get("/articles", function(req, res){
        });
 })
 
-//add article to saved database
-app.post("/addSaved", function(req, res){
-
+//set article to saved
+app.get("/save/:id", function(req, res){
+    console.log("in save + id block");
+    console.log(req.params.id);
+    db.Article.findOneAndUpdate({ _id: req.params.id }, {set: {saved: true}})
+      .then(function(dbArticle){
+        console.log("Article saved", dbArticle);
+        res.json(dbArticle);
+      })
 });
 
 //retrieve all of the saved articles
-app.get("/saved", function(req, res){
-
+app.get("/getSaved", function(req, res){
+    db.Article.find({saved: true})
+      .then(function(dbArticle){
+        console.log(dbArticle);
+        res.render("index", {saved: dbArticle});
+      })
 });
 
 //retrieve article contents and note
