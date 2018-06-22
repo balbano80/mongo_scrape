@@ -11,7 +11,7 @@ var db = require("./models");
 
 var app = express();
 
-var PORT = 3333;
+var PORT = process.env.PORT || 3333;
 
 //handlebars setup
 app.engine("handlebars", exphbs({ defaultLayout: "main"}));
@@ -24,9 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(express.static("public"));
 
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/hwMongo", {
-    useMongoClient: true
-});
+mongoose.connect(MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/hwMongo");
 
 //homepage
 app.get("/", function(req, res) {
