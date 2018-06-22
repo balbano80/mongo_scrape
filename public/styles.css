@@ -8,15 +8,13 @@ body {
     -o-background-size: cover;
  }
 
- .arts {
+ .articles {
     color: white;
  }
 
- /* li{
-     background-color: black;
- } */
-
- #btn-info{
-     
+ .well { margin: 20px; } 
+ .well > * {
+     margin: 25px;
  }
+ 
  

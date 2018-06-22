@@ -11,7 +11,8 @@ var ArticleSchema = new Schema({
     },
     summary: {
         type: String,
-        trim: true
+        trim: true,
+        unique: true
     },
     url: {
         type: String,
@@ -21,6 +22,10 @@ var ArticleSchema = new Schema({
     saved: {
         type: Boolean,
         default: false
+    },
+    note: {
+        type: Schema.Types.ObjectId,
+        ref: "Note"
     }
 });
 

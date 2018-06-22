@@ -30,10 +30,19 @@ mongoose.connect("mongodb://localhost/hwMongo", {
 
 //homepage
 app.get("/", function(req, res) {
-    res.render("index");
+    db.Article.find({saved: false}).then(function(result){
+        console.log(result.length);
+        if(result.length > 0){
+            res.render("index", {articles: result});
+        }
+        else{
+
+            res.render("index")
+        }
+    })
+
 });
   
-
 //reach out to the site, scrape and display articles on page
 app.get("/scrape", function(req, res){
 
@@ -54,19 +63,21 @@ app.get("/scrape", function(req, res){
                 // articleArr.push(result);
                 db.Article.create(result)
                     .then(function(dbArticle){
-                        console.log(dbArticle);
-                    }).catch(function(err){
-                        return res.json(err);
-                      })
+                        console.log("article created");
+                    })
+                        // console.log(dbArticle);
+                    // }).catch(function(err){
+                    //     return res.json(err);
+                    //   })
             
             })
         }
     });
-    res.json("Scrape Done");
+    res.json("scrape completed");
 });
 
 app.get("/articles", function(req, res){
-    db.Article.find({})
+    db.Article.find({saved: false})
       .then(function(dbArticle){
         console.log("in find all articles block");
         res.render("index", {articles: dbArticle});
@@ -78,9 +89,9 @@ app.get("/articles", function(req, res){
 
 //set article to saved
 app.get("/save/:id", function(req, res){
-    console.log("in save + id block");
+    console.log("in save id block");
     console.log(req.params.id);
-    db.Article.findOneAndUpdate({ _id: req.params.id }, {set: {saved: true}})
+    db.Article.findOneAndUpdate({ _id: req.params.id }, {$set: {"saved": true}})
       .then(function(dbArticle){
         console.log("Article saved", dbArticle);
         res.json(dbArticle);
@@ -90,10 +101,15 @@ app.get("/save/:id", function(req, res){
 //retrieve all of the saved articles
 app.get("/getSaved", function(req, res){
     db.Article.find({saved: true})
-      .then(function(dbArticle){
-        console.log(dbArticle);
-        res.render("index", {saved: dbArticle});
-      })
+      .then(function(savedArticles){
+        //   console.log("saved Articles", savedArticles)
+          if(savedArticles.length > 0){
+            res.render("index", {saved: savedArticles});
+          }
+          else{
+              res.render("index")
+            }
+          })
 });
 
 //retrieve article contents and note
@@ -107,9 +123,16 @@ app.post("/articles/:id", function(req, res){
 });
 
 //delete article note
-app.delete("/article/:id", function(req, res){
-
-})
+app.get("/delete/:id", function(req, res){
+    db.Article.findOneAndRemove({_id: req.params.id}, (err, result) => {
+        if (err){
+            res.status(500).send(err);
+        }
+        else{
+            res.json("article deleted");
+        }
+    });
+});
 
 app.listen(PORT, function(){
     console.log("Connected on port " + PORT);
